@@ -1,0 +1,43 @@
+.shelf {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.shelf-number {
+    span {
+        color: #fff;
+        font-weight: bolder;
+        font-size: 80px;
+    }
+}
+
+.shelf-site {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding-top: 35px;
+
+    span {
+        background-color: #000066;
+        color: lightblue;
+        padding: 5px 25px;
+        position: relative;
+        border-radius: 20px;
+
+        img {
+            position: absolute;
+            left: -20px;
+            top: -5px;
+        }
+    }  
+}
+
+.shelf-foundation h2 {
+    color: #1f1f2e;
+}
+

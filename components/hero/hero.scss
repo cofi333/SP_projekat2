@@ -1,0 +1,16 @@
+  
+.hero-shelfs {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    padding: 75px 0;
+}
+
+.hero-hat-stand {
+    position: relative;
+
+    .hero-hat-stand-sweaters {
+        position: absolute;
+        top: 0;
+    }
+}
