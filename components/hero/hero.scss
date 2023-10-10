@@ -1,16 +1,47 @@
-  
+.hero-header {
+    position: relative;
+}  
+
+#hero-sendBtn {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .hero-shelfs {
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
-    padding: 75px 0;
+    padding-top: 250px;
+    padding-bottom: 150px;
 }
 
 .hero-hat-stand {
     position: relative;
+}
 
-    .hero-hat-stand-sweaters {
-        position: absolute;
-        top: 0;
+#hero-resetBtn {
+    justify-content: center;
+    padding-bottom: 50px;
+}
+
+@media only screen and (max-width: 1150px) {
+    .hero-shelfs {
+        flex-direction: column;
+        gap: 135px;
+        padding-top: 125px;
+        padding-bottom: 50px;
     }
 }
+
+
+@media only screen and (max-width: 500px) {
+    .hero-shelfs {
+        padding: 75px 0;
+        gap: 75px;
+    }
+}
+
+
+

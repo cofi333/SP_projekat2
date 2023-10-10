@@ -1,18 +1,24 @@
+
 .shelf {
     display: flex;
     flex-direction: column;
     align-items: center;
     flex: 1;
     text-align: center;
-    position: relative;
 }
 
 .shelf-number {
+    display: flex;
+    flex-direction: column;
     span {
         color: #fff;
         font-weight: bolder;
         font-size: 80px;
     }
+}
+
+.shelf-site-mobile {
+    display: none;
 }
 
 .shelf-site {
@@ -34,10 +40,150 @@
             left: -20px;
             top: -5px;
         }
+        
+        .web {
+            text-decoration: none;
+            color: lightblue;
+        }
     }  
 }
 
-.shelf-foundation h2 {
-    color: #1f1f2e;
+.shelf-foundation {
+    display: flex;
+    flex-direction: column;
+    h2 {
+        color: #1f1f2e;
+    }
 }
 
+.shelf-image  {
+    position: relative;
+
+    .shelf-sweaters {
+        position: absolute;
+        top: 5px;
+    }
+}
+
+
+@media only screen and (max-width: 1450px) {
+    .shelf-image .shelf {
+        width: 250px;
+        height: 70px;
+    }
+}
+
+@media only screen and (max-width: 1150px) {
+    .shelf {
+        flex-direction: row-reverse;
+        gap: 50px;
+        justify-content: center;
+    }
+
+    .shelf-site {
+        align-items: center;
+        padding-top: 0;
+        gap: 10px;
+        span {
+            background-color: unset;
+            padding: 0;
+
+            .web {
+                display: none;
+            }
+        }
+    }
+
+    .shelf-site-mobile {
+        display: block;
+    }
+
+    .shelf-foundation {
+        flex-direction: row-reverse;
+
+        span img {
+            position: static;
+        }
+    }
+
+    .shelf-number {
+        flex-direction: row;
+        align-items: center;
+        gap: 25px;
+
+        h2 {
+            width: 350px;
+        }
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    .shelf-image .shelf {
+        width: 200px;
+        height: 50px;
+    }
+
+    .shelf-number h2 {
+        width: 200px;
+        font-size: 20px;
+    }
+
+    .shelf-number span {
+        font-size: 40px;
+    }
+
+    .shelf {
+        gap: 25px;
+    }
+}
+
+@media only screen and (max-width: 650px) {
+    .shelf-image .shelf {
+        width: 160px;
+        height: 40px;
+    }
+
+    .shelf-number h2 {
+        width: 150px;
+        font-size: 17px;
+    }
+
+    .shelf-site-mobile img, .shelf-site span img {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .shelf-number {
+        gap: 10px;
+        span {
+            font-size: 30px;
+        }
+    }
+
+    .shelf {
+        gap: 8px;
+    }
+
+    .shelf-number {
+        h2 {
+            width: 105px;
+            font-size: 12px;
+        }
+
+        span {
+            font-size: 25px;
+        }
+    }
+
+    .shelf-site-mobile img, .shelf-site span img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .shelf-image .shelf{
+        width: 110px;
+        height: 30px;
+    }
+}

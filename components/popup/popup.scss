@@ -1,0 +1,47 @@
+.MuiSheet-root {
+    background-color: #1f425a !important;
+    max-width: 90% !important;
+    color: #fff !important;
+}
+
+#modal-desc {
+    color: #fff !important;
+    padding: 10px 30px;
+    font-size: 20px;
+}
+
+#modal-title {
+    text-align: center;
+    padding-top: 25px;
+    font-size: 30px;
+}
+
+.MuiModalClose-root {
+    &:hover {
+        background-color: #142a39 !important;
+    }
+
+    svg {
+        color: #fff;
+    }
+}
+
+#info {
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 768px) {
+    #modal-desc {
+        font-size: 16px;
+    }
+
+    #modal-title {
+        font-size: 25px;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    #modal-desc {
+        padding: 10px 0;
+    }
+}
