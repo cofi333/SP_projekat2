@@ -1,29 +1,43 @@
 import Image from "next/image"
 import { Sweater,Shelf, Button } from "@/components"
 import { sweaters, foundations } from "@/constants"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import './hero.scss'
 import { useDrop } from "react-dnd"
 
 const Hero = () => {
 
   const [sweatersState, setSweaters] = useState(sweaters)
+  const shelfRefs = Array.from({ length: 4 }, () => useRef(null));
 
   const handleDrop = (draggedSweater) => {
     setSweaters((prevSweaters) => prevSweaters.filter((item) => item.id !== draggedSweater));
   }
 
+
   const [{isOver},drop] = useDrop(() => ({
     accept: 'image',
     drop: (item) => {
-      
+      addBackSweater(item.id),
+      removeSweaterFromShelf(item.id)
+  
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver()
     })
   }))
 
-  const toggleButton = () => {
+  const removeSweaterFromShelf = (item) => {
+    shelfRefs.forEach((ref) => {
+        ref.current.sweaters.forEach((sweater) => {
+          if(sweater.id === item) {
+              ref.current.removeSweaterFromShelf(item)
+          }
+        })
+    }) 
+  }
+
+  const toggleButtons = () => {
     let resetBtn = document.getElementById('hero-resetBtn');
     let sendBtn = document.getElementById('hero-sendBtn');
     let numOfSweaters = sweatersState.length;
@@ -32,7 +46,20 @@ const Hero = () => {
     sendBtn.style.display = numOfSweaters === 0 ? 'block' : 'none';
   };
 
-  useEffect(toggleButton, [sweatersState]);
+  const addBackSweater = (sweaterId) => {
+    let sweater = sweatersState.find((sweater) => sweaterId === sweater.id);
+   setSweaters((prevSweaters) => [...prevSweaters, sweater]);
+  }
+
+  const resetSweaters = () => {
+    setSweaters(sweaters);
+    
+    shelfRefs.forEach((ref) => {
+      ref.current.resetAllSweaters();
+    })
+  }
+
+  useEffect(toggleButtons, [sweatersState]);
 
 
   return (
@@ -56,13 +83,13 @@ const Hero = () => {
 
     
       <div className='hero-shelfs'>
-        {foundations.map((foundation) => (
-            <Shelf key={foundation.id} name={foundation.name.toUpperCase()} site={foundation.site} onDrop={handleDrop}/>
+        {foundations.map((foundation, index) => (
+            <Shelf key={foundation.id} id={foundation.id} name={foundation.name.toUpperCase()} site={foundation.site} onDrop={handleDrop} ref={shelfRefs[index]}/>
         ))}
       </div>   
 
       <div id='hero-resetBtn'>
-        <Button text='VISSZAÁLITÁS' type='reset'/>
+        <Button text='VISSZAÁLITÁS' type='reset' onClick={resetSweaters}/>
       </div>
     </div>
   )

@@ -1,6 +1,4 @@
 'use client'
-import Image from "next/image"
-import styled from "styled-components"
 import { useDrag } from "react-dnd"
 import { SweaterStyled, FoldedSweaterStyled } from "./SweaterStyled"
 

@@ -1,16 +1,17 @@
 'use client'
 import Image from "next/image"
-import { useState } from "react"
+import { useState, forwardRef, useImperativeHandle} from "react"
 import './shelf.scss'
 import { useDrop } from "react-dnd"
 import { sweaters } from "@/constants"
 import { Sweater, Popup } from "@/components"
 
 
-const Shelf = (props) => {
+const Shelf = forwardRef((props, ref) => {
 
   const [countSweaters, setCountSweaters] = useState(0);
   const [sweatersList, setSweaters] = useState([])
+  
 
   const [{isOver},drop] = useDrop(() => ({
     accept: 'image',
@@ -24,15 +25,34 @@ const Shelf = (props) => {
     })
   }))
 
+  useImperativeHandle(ref, () => (
+    {
+      removeSweaterFromShelf: (id) => {
+        setSweaters((prevSweaters) => prevSweaters.filter((item) => item.id !== id));
+        decCountSweaters();
+      },
+      resetAllSweaters: () => {
+         setSweaters([]);
+         setCountSweaters(0); 
+      },
+      sweaters: sweatersList,
+    }))
+
+
   const addSweaterToShelf = (id) => {
-    const addSweaterList = sweaters.filter((sweater) => id === sweater.id);
-    setSweaters((sweaters2) => [...sweaters2, addSweaterList[0]]);
+    const addSweater = sweaters.find((sweater) => id === sweater.id);
+    setSweaters((prevSweaters) => [...prevSweaters, addSweater])
   }
 
   const incCountSweaters = () => {
     setCountSweaters((prev) => prev+1);
   }
 
+  const decCountSweaters = () => {
+    setCountSweaters((prev) => prev-1);
+  }
+
+  
   return (
     <div className='shelf' ref={drop}>
       <div className='shelf-image'>
@@ -40,7 +60,7 @@ const Shelf = (props) => {
 
         <div className='shelf-sweaters'>
           {sweatersList.map((sweater,index) => (
-              <Sweater img2={sweater.img2} top={(index+1)} key={index}/>
+              <Sweater img2={sweater.img2} top={(index+1)} key={index} id={sweater.id}/>
           ))}
         </div>
       </div>
@@ -66,6 +86,6 @@ const Shelf = (props) => {
 
     </div>
   )
-}
+})
 
 export default Shelf
