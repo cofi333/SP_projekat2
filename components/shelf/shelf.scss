@@ -10,11 +10,6 @@
 .shelf-number {
     display: flex;
     flex-direction: column;
-    span {
-        color: #fff;
-        font-weight: bolder;
-        font-size: 80px;
-    }
 }
 
 .shelf-site-mobile {
@@ -128,10 +123,6 @@
         font-size: 20px;
     }
 
-    .shelf-number span {
-        font-size: 40px;
-    }
-
     .shelf {
         gap: 25px;
     }
@@ -163,7 +154,7 @@
     }
 
     .shelf {
-        gap: 8px;
+        gap: 6px;
     }
 
     .shelf-number {

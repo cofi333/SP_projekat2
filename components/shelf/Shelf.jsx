@@ -1,10 +1,10 @@
 'use client'
 import Image from "next/image"
-import { useState, forwardRef, useImperativeHandle} from "react"
+import { useState, forwardRef, useImperativeHandle, useEffect } from "react"
 import './shelf.scss'
 import { useDrop } from "react-dnd"
 import { sweaters } from "@/constants"
-import { Sweater, Popup } from "@/components"
+import { Sweater, InfoPopup, SweatersPopup} from "@/components"
 
 
 const Shelf = forwardRef((props, ref) => {
@@ -13,16 +13,14 @@ const Shelf = forwardRef((props, ref) => {
   const [sweatersList, setSweaters] = useState([])
   
 
-  const [{isOver},drop] = useDrop(() => ({
+  const [,drop] = useDrop(() => ({
     accept: 'image',
     drop: (item) => {
-      addSweaterToShelf(item.id),
-      incCountSweaters(),
+      addSweaterToShelf(item.id)
+      incCountSweaters()
       props.onDrop(item.id)
     },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver()
-    })
+    
   }))
 
   useImperativeHandle(ref, () => (
@@ -39,10 +37,10 @@ const Shelf = forwardRef((props, ref) => {
     }))
 
 
-  const addSweaterToShelf = (id) => {
-    const addSweater = sweaters.find((sweater) => id === sweater.id);
-    setSweaters((prevSweaters) => [...prevSweaters, addSweater])
-  }
+   const addSweaterToShelf = (id) => {
+      const addSweater = sweaters.find((sweater) => id === sweater.id);
+      setSweaters((prevSweaters) => [...prevSweaters, addSweater])
+    }
 
   const incCountSweaters = () => {
     setCountSweaters((prev) => prev+1);
@@ -52,7 +50,10 @@ const Shelf = forwardRef((props, ref) => {
     setCountSweaters((prev) => prev-1);
   }
 
-  
+  useEffect(() => {
+    props.onChange(props.id-1, countSweaters);
+  },[countSweaters])
+
   return (
     <div className='shelf' ref={drop}>
       <div className='shelf-image'>
@@ -60,20 +61,20 @@ const Shelf = forwardRef((props, ref) => {
 
         <div className='shelf-sweaters'>
           {sweatersList.map((sweater,index) => (
-              <Sweater img2={sweater.img2} top={(index+1)} key={index} id={sweater.id}/>
+              <Sweater img2={sweater.img2} top={(index+1)} key={sweater.id} id={sweater.id}/>
           ))}
         </div>
       </div>
 
       <div className='shelf-number'>
-        <span>{countSweaters}</span>
+        <SweatersPopup numbers={countSweaters}/>
         <h2>{props.name}</h2>
       </div>
 
       <div className='shelf-foundation'>
         <div className='shelf-site'>
           <span>
-            <Popup/>
+            <InfoPopup/>
             <a href={`https://${props.site}`} className='web' target="_blank">{props.site}</a>
           </span>
 

@@ -4,27 +4,26 @@ import { sweaters, foundations } from "@/constants"
 import { useState, useEffect, useRef } from "react"
 import './hero.scss'
 import { useDrop } from "react-dnd"
+import axios from "axios"
 
 const Hero = () => {
 
   const [sweatersState, setSweaters] = useState(sweaters)
+  const [numOfSweaters, setNumOfSweaters] = useState([0,0,0,0]);
+  const [ipAddress, setIpAddress] = useState();
   const shelfRefs = Array.from({ length: 4 }, () => useRef(null));
 
   const handleDrop = (draggedSweater) => {
-    setSweaters((prevSweaters) => prevSweaters.filter((item) => item.id !== draggedSweater));
-  }
+     setSweaters((prevSweaters) => prevSweaters.filter((item) => item.id !== draggedSweater));
+   }
 
-
-  const [{isOver},drop] = useDrop(() => ({
+  const [,drop] = useDrop(() => ({
     accept: 'image',
     drop: (item) => {
       addBackSweater(item.id),
       removeSweaterFromShelf(item.id)
-  
     },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver()
-    })
+    
   }))
 
   const removeSweaterFromShelf = (item) => {
@@ -37,31 +36,78 @@ const Hero = () => {
     }) 
   }
 
-  const toggleButtons = () => {
-    let resetBtn = document.getElementById('hero-resetBtn');
-    let sendBtn = document.getElementById('hero-sendBtn');
-    let numOfSweaters = sweatersState.length;
+   const toggleButtons = () => {
+     let resetBtn = document.getElementById('hero-resetBtn');
+     let sendBtn = document.getElementById('hero-sendBtn');
+     let numOfSweaters = sweatersState.length;
     
-    resetBtn.style.display = numOfSweaters < 12 ? 'flex' : 'none';
-    sendBtn.style.display = numOfSweaters === 0 ? 'block' : 'none';
-  };
+     resetBtn.style.display = numOfSweaters < 12 ? 'flex' : 'none';
+     sendBtn.style.display = numOfSweaters === 0 ? 'block' : 'none';
+   };
 
-  const addBackSweater = (sweaterId) => {
-    let sweater = sweatersState.find((sweater) => sweaterId === sweater.id);
-   setSweaters((prevSweaters) => [...prevSweaters, sweater]);
-  }
+   const addBackSweater = (sweaterId) => {
+     let sweater = sweatersState.find((sweater) => sweaterId === sweater.id);
+    setSweaters((prevSweaters) => [...prevSweaters, sweater]);
+   }
 
-  const resetSweaters = () => {
-    setSweaters(sweaters);
+   const resetSweaters = () => {
+     setSweaters(sweaters);
     
-    shelfRefs.forEach((ref) => {
-      ref.current.resetAllSweaters();
+     shelfRefs.forEach((ref) => {
+       ref.current.resetAllSweaters();
+     })
+   }
+
+   const handleChildState = (childIndex, newState) => {
+    setNumOfSweaters((prevSweaters) => {
+      const newNums = [...prevSweaters];
+      newNums[childIndex] = newState;
+      return newNums;
     })
+   }
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+  
+    const time = `${hours}:${minutes}:${seconds}`;
+
+    return time;
   }
 
+   const getIp = async () => {
+    try {
+      const response = await axios.get("https://api.ipify.org/?format=json");
+      setIpAddress(response.data.ip);
+    }
+    catch (error) {
+      console.error("Error fetching ip address: ", error);
+    }
+   }
+
+   const data = {
+    szent_istvan_kiraly_zenei_alapitvany: numOfSweaters[0],
+    autizmus_alapitvany: numOfSweaters[1],
+    elemiszer_bankegysulet: numOfSweaters[2],
+    lampas_92_alapitvany: numOfSweaters[3],
+    time: getCurrentTime(),
+    ip: ipAddress
+   }
+
+   const sendData = () => {
+      try {
+        axios.post("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930", data);
+      }
+      catch(error) {
+        console.error("Error: ", error);
+      }
+    }
+
+  useEffect(() => {getIp()},[]);
   useEffect(toggleButtons, [sweatersState]);
-
-
+  
   return (
     <div>
       <div className='hero-header'>
@@ -77,14 +123,14 @@ const Hero = () => {
         </div>
 
         <div id='hero-sendBtn'>
-          <Button text='ELKŰLDŐM'/>
+          <Button text='ELKŰLDŐM' onClick={sendData}/>
         </div>
       </div>
 
     
       <div className='hero-shelfs'>
         {foundations.map((foundation, index) => (
-            <Shelf key={foundation.id} id={foundation.id} name={foundation.name.toUpperCase()} site={foundation.site} onDrop={handleDrop} ref={shelfRefs[index]}/>
+            <Shelf key={foundation.id} onChange={handleChildState} id={foundation.id} name={foundation.name.toUpperCase()} onDrop={handleDrop} site={foundation.site} ref={shelfRefs[index]}/>
         ))}
       </div>   
 

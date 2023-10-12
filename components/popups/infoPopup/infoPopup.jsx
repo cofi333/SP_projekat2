@@ -4,7 +4,7 @@ import Typography from '@mui/joy/Typography';
 import Sheet from '@mui/joy/Sheet';
 import { useState } from 'react';
 import Image from 'next/image';
-import './popup.scss'
+import './infoPopup.scss'
 
 const Popup = () => {
 

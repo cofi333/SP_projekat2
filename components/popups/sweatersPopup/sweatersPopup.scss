@@ -1,0 +1,19 @@
+.MuiButton-root {
+    background-color: unset;
+    color: #fff;
+    font-weight: bolder;
+    font-size: 80px;
+}
+
+@media only screen and (max-width: 900px) {
+    .MuiButton-root {
+        font-size: 40px;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .MuiButton-root {
+        font-size: 30px;
+        padding: 0;
+    }
+}

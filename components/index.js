@@ -1,5 +1,6 @@
 export { default as Hero } from './hero/Hero'
 export { default as Sweater } from './sweater/Sweater'
 export { default as Shelf } from './shelf/Shelf'
-export { default as Popup } from './popup/Popup'
+export { default as InfoPopup } from './popups/infoPopup/infoPopup'
+export { default as SweatersPopup } from './popups/sweatersPopup/SweatersPopup'
 export { default as Button } from './button/Button'
