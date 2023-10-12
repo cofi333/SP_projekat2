@@ -1,19 +1,21 @@
-.MuiButton-root {
-    background-color: unset;
+.number {
     color: #fff;
-    font-weight: bolder;
-    font-size: 80px;
+    font-size: 70px;
+    cursor: pointer;
+}
+
+span {
+    display: block;
 }
 
 @media only screen and (max-width: 900px) {
-    .MuiButton-root {
-        font-size: 40px;
+    .number {
+        font-size: 50px;
     }
 }
 
 @media only screen and (max-width: 500px) {
-    .MuiButton-root {
-        font-size: 30px;
-        padding: 0;
+    .number {
+        font-size: 25px;
     }
 }

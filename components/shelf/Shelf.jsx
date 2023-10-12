@@ -67,7 +67,7 @@ const Shelf = forwardRef((props, ref) => {
       </div>
 
       <div className='shelf-number'>
-        <SweatersPopup numbers={countSweaters}/>
+        <SweatersPopup numbers={countSweaters} sweaters={sweatersList}/>
         <h2>{props.name}</h2>
       </div>
 
