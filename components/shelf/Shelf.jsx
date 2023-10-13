@@ -11,8 +11,10 @@ const Shelf = forwardRef((props, ref) => {
 
   const [countSweaters, setCountSweaters] = useState(0);
   const [sweatersList, setSweaters] = useState([])
-  
 
+  const incCountSweaters = () => setCountSweaters((prev) => prev+1);
+  const decCountSweaters = () => setCountSweaters((prev) => prev-1);
+  
   const [,drop] = useDrop(() => ({
     accept: 'image',
     drop: (item) => {
@@ -41,14 +43,6 @@ const Shelf = forwardRef((props, ref) => {
       const addSweater = sweaters.find((sweater) => id === sweater.id);
       setSweaters((prevSweaters) => [...prevSweaters, addSweater])
     }
-
-  const incCountSweaters = () => {
-    setCountSweaters((prev) => prev+1);
-  }
-
-  const decCountSweaters = () => {
-    setCountSweaters((prev) => prev-1);
-  }
 
   useEffect(() => {
     props.onChange(props.id-1, countSweaters);

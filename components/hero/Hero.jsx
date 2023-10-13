@@ -1,7 +1,9 @@
+'use client'
 import Image from "next/image"
 import { Sweater,Shelf, Button } from "@/components"
 import { sweaters, foundations } from "@/constants"
 import { useState, useEffect, useRef } from "react"
+import { getCurrentDate, getCurrentTime } from "@/functions"
 import './hero.scss'
 import { useDrop } from "react-dnd"
 import axios from "axios"
@@ -13,17 +15,14 @@ const Hero = () => {
   const [ipAddress, setIpAddress] = useState();
   const shelfRefs = Array.from({ length: 4 }, () => useRef(null));
 
-  const handleDrop = (draggedSweater) => {
-     setSweaters((prevSweaters) => prevSweaters.filter((item) => item.id !== draggedSweater));
-   }
-
+  const handleDrop = (draggedSweater) => setSweaters((prevSweaters) => prevSweaters.filter((item) => item.id !== draggedSweater));
+   
   const [,drop] = useDrop(() => ({
     accept: 'image',
     drop: (item) => {
       addBackSweater(item.id),
       removeSweaterFromShelf(item.id)
-    },
-    
+    }
   }))
 
   const removeSweaterFromShelf = (item) => {
@@ -40,23 +39,21 @@ const Hero = () => {
      let resetBtn = document.getElementById('hero-resetBtn');
      let sendBtn = document.getElementById('hero-sendBtn');
      let numOfSweaters = sweatersState.length;
-    
      resetBtn.style.display = numOfSweaters < 12 ? 'flex' : 'none';
      sendBtn.style.display = numOfSweaters === 0 ? 'block' : 'none';
-   };
+    };
 
-   const addBackSweater = (sweaterId) => {
+    const addBackSweater = (sweaterId) => {
      let sweater = sweatersState.find((sweater) => sweaterId === sweater.id);
-    setSweaters((prevSweaters) => [...prevSweaters, sweater]);
-   }
+      setSweaters((prevSweaters) => [...prevSweaters, sweater]);
+    }
 
    const resetSweaters = () => {
      setSweaters(sweaters);
-    
      shelfRefs.forEach((ref) => {
        ref.current.resetAllSweaters();
      })
-   }
+    }
 
    const handleChildState = (childIndex, newState) => {
     setNumOfSweaters((prevSweaters) => {
@@ -65,17 +62,6 @@ const Hero = () => {
       return newNums;
     })
    }
-
-  const getCurrentTime = () => {
-    const now = new Date();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-  
-    const time = `${hours}:${minutes}:${seconds}`;
-
-    return time;
-  }
 
    const getIp = async () => {
     try {
@@ -92,6 +78,7 @@ const Hero = () => {
     autizmus_alapitvany: numOfSweaters[1],
     elemiszer_bankegysulet: numOfSweaters[2],
     lampas_92_alapitvany: numOfSweaters[3],
+    date: getCurrentDate(),
     time: getCurrentTime(),
     ip: ipAddress
    }
@@ -127,7 +114,7 @@ const Hero = () => {
         </div>
       </div>
 
-    
+
       <div className='hero-shelfs'>
         {foundations.map((foundation, index) => (
             <Shelf key={foundation.id} onChange={handleChildState} id={foundation.id} name={foundation.name.toUpperCase()} onDrop={handleDrop} site={foundation.site} ref={shelfRefs[index]}/>
