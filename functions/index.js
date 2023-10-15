@@ -7,7 +7,7 @@ export const getCurrentTime = () => {
     const time = `${hours}:${minutes}:${seconds}`;
 
     return time;
-  }
+}
 
 export const getCurrentDate = () => {
     const currentDate = new Date();
@@ -16,7 +16,8 @@ export const getCurrentDate = () => {
     const month = currentDate.getMonth() + 1;
     const year = currentDate.getFullYear();
     
-    const formattedDate = `${day}.${month}.${year}`;
+    const formattedDate = `${day}.${month}.${year}.`;
     
     return formattedDate;
-  }
+}
+

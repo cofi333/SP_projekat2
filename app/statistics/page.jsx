@@ -66,6 +66,8 @@ const page = () => {
 
   }
 
+  console.log('re-render')
+
   return (
     <div className="statistics">
       {isLoading ? (
@@ -98,7 +100,8 @@ const page = () => {
             </div>
   
             <div className="hero-s last-request">
-              <h2>Date and time of last request: {lastDateAndTimeRequest()}</h2>
+              <h2>Date and time of last request:</h2>
+              {lastDateAndTimeRequest()}
             </div>
   
             <div className="hero-s table">

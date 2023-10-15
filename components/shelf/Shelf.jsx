@@ -15,15 +15,14 @@ const Shelf = forwardRef((props, ref) => {
   const incCountSweaters = () => setCountSweaters((prev) => prev+1);
   const decCountSweaters = () => setCountSweaters((prev) => prev-1);
   
-  const [,drop] = useDrop(() => ({
+  const [, drop] = useDrop(() => ({
     accept: 'image',
     drop: (item) => {
-      addSweaterToShelf(item.id)
-      incCountSweaters()
-      props.onDrop(item.id)
+      if(!item.folded) {
+        addSweaterToShelf(item.id);
+      }
     },
-    
-  }))
+  }));
 
   useImperativeHandle(ref, () => (
     {
@@ -38,15 +37,30 @@ const Shelf = forwardRef((props, ref) => {
       sweaters: sweatersList,
     }))
 
-
-   const addSweaterToShelf = (id) => {
+    const addSweaterToShelf = (id) => {
       const addSweater = sweaters.find((sweater) => id === sweater.id);
-      setSweaters((prevSweaters) => [...prevSweaters, addSweater])
-    }
+      let sweaterAdded = false;
+    
+      setSweaters((prevSweaters) => {
+        if (!prevSweaters.some((sweater) => sweater.id === addSweater.id)) {
+          if (!sweaterAdded) {
+            incCountSweaters();
+            props.onDrop(id);
+            sweaterAdded = true; 
+          }
+  
+          const updatedSweaters = [...prevSweaters, addSweater];
+          return updatedSweaters; 
+        } else {
+          return prevSweaters; 
+        }
+      });
+    };
 
   useEffect(() => {
     props.onChange(props.id-1, countSweaters);
   },[countSweaters])
+
 
   return (
     <div className='shelf' ref={drop}>

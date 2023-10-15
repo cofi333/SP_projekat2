@@ -6,7 +6,8 @@ const Sweater = (props) => {
 
   const [{isDragging}, drag] = useDrag(() => ( {
     type: 'image',
-    item: {id: props.id}
+    item: {id: props.id,
+    folded: props.img2 == null ? false : true}
   }))
 
   return (

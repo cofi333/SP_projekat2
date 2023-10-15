@@ -44,8 +44,16 @@ const Hero = () => {
     };
 
     const addBackSweater = (sweaterId) => {
-     let sweater = sweatersState.find((sweater) => sweaterId === sweater.id);
-      setSweaters((prevSweaters) => [...prevSweaters, sweater]);
+     let addSweater = sweatersState.find((sweater) => sweaterId === sweater.id);
+      setSweaters((prevSweaters) => {
+        if(!prevSweaters.some((sweater) => sweater.id === addSweater.id)) {
+          const updatedSweaters = [...prevSweaters, addSweater];
+          return updatedSweaters; 
+        }
+        else {
+          return prevSweaters;
+        }
+      })
     }
 
    const resetSweaters = () => {
@@ -73,27 +81,40 @@ const Hero = () => {
     }
    }
 
-   const data = {
-    szent_istvan_kiraly_zenei_alapitvany: numOfSweaters[0],
-    autizmus_alapitvany: numOfSweaters[1],
-    elemiszer_bankegysulet: numOfSweaters[2],
-    lampas_92_alapitvany: numOfSweaters[3],
-    date: getCurrentDate(),
-    time: getCurrentTime(),
-    ip: ipAddress
-   }
 
    const sendData = () => {
-      try {
-        axios.post("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930", data);
-      }
-      catch(error) {
-        console.error("Error: ", error);
-      }
+    const lastSentTime = localStorage.getItem('lastSentTime');
+    const currentTime = new Date().getTime();
+
+    if (lastSentTime && currentTime - lastSentTime  < 600000) {
+      alert("Error sending data. 10 minutes haven't passed since the last request.");
+      return;
     }
+  
+    try {
+      const data = {
+        szent_istvan_kiraly_zenei_alapitvany: numOfSweaters[0] === 0 ? "0" : numOfSweaters[0],
+        autizmus_alapitvany: numOfSweaters[1] === 0 ? "0" : numOfSweaters[1],
+        elemiszer_bankegysulet: numOfSweaters[2] === 0 ? "0" : numOfSweaters[2],
+        lampas_92_alapitvany: numOfSweaters[3] === 0 ? "0" : numOfSweaters[3],
+        date: getCurrentDate(),
+        time: getCurrentTime(), 
+        ip: ipAddress
+      };
+  
+      axios.post("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930", data);
+      localStorage.setItem('lastSentTime', currentTime.toString());
+
+      alert("Data sent successfully!");
+    } catch(error) {
+      console.error("Error: ", error);
+    }
+  }
 
   useEffect(() => {getIp()},[]);
   useEffect(toggleButtons, [sweatersState]);
+
+
   
   return (
     <div>
