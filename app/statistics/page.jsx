@@ -3,6 +3,7 @@ import './statistics.scss'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { ProgressBar } from 'react-loader-spinner'
+import { Table } from '@/components'
 
 const page = () => {
 
@@ -66,7 +67,7 @@ const page = () => {
 
   }
 
-  console.log('re-render')
+  
 
   return (
     <div className="statistics">
@@ -106,9 +107,7 @@ const page = () => {
   
             <div className="hero-s table">
               <h2>Data:</h2>
-              <table>
-                
-              </table>
+                <Table tableData={data}/>
             </div>
           </div>
         </>
