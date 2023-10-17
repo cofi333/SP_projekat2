@@ -9,12 +9,10 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { TablePagination } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import './table.scss'
-import { TablePaginationActions } from '@/components';
+import { TablePaginationActions, Dialog } from '@/components';
 import Button from '@mui/material/Button';
-
 
 function createData(foundation1, foundation2, foundation3 ,foundation4, date, time, ip, key) {
   return { foundation1, foundation2, foundation3, foundation4, date, time, ip, key };
@@ -81,8 +79,8 @@ export default function BasicTable(props) {
 
       const sortedRows = stableSort(rows, getComparator(order, orderBy));
 
-      
-
+   
+    
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -133,7 +131,7 @@ export default function BasicTable(props) {
                 {row.ip}
               </TableCell>
               <TableCell align="center">
-              <Button variant="outlined" color="error">Delete</Button>
+                <Dialog onDelete={() => {props.onDelete(row.key)}}/>
               </TableCell>
             </TableRow>
           ))}
@@ -142,7 +140,7 @@ export default function BasicTable(props) {
                 colSpan={3}
                 count={rows.length}
                 rowsPerPage={rowsPerPage}
-                rowsPerPageOptions={[ 10, { label: 'All', value: -1 }]}
+                rowsPerPageOptions={[10]}
                 page={page}
                 SelectProps={{
                     inputProps: {

@@ -21,3 +21,8 @@ export const getCurrentDate = () => {
     return formattedDate;
 }
 
+export const parseTime = (timeString) => {
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    return (hours * 60 * 60 + minutes * 60 + seconds) * 1000;
+  }
+

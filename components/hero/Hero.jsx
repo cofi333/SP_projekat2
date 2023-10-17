@@ -3,7 +3,7 @@ import Image from "next/image"
 import { Sweater,Shelf, Button } from "@/components"
 import { sweaters, foundations } from "@/constants"
 import { useState, useEffect, useRef } from "react"
-import { getCurrentDate, getCurrentTime } from "@/functions"
+import { getCurrentDate, getCurrentTime, parseTime } from "@/functions"
 import './hero.scss'
 import { useDrop } from "react-dnd"
 import axios from "axios"
@@ -12,6 +12,9 @@ const Hero = () => {
 
   const [sweatersState, setSweaters] = useState(sweaters)
   const [numOfSweaters, setNumOfSweaters] = useState([0,0,0,0]);
+  const [displayResetBtn, setDisplayResetBtn] = useState(false);
+  const [displaySendBtn, setDisplaySetBtn] = useState(false);
+  const [data, setData] = useState();
   const [ipAddress, setIpAddress] = useState();
   const shelfRefs = Array.from({ length: 4 }, () => useRef(null));
 
@@ -36,11 +39,9 @@ const Hero = () => {
   }
 
    const toggleButtons = () => {
-     let resetBtn = document.getElementById('hero-resetBtn');
-     let sendBtn = document.getElementById('hero-sendBtn');
      let numOfSweaters = sweatersState.length;
-     resetBtn.style.display = numOfSweaters < 12 ? 'flex' : 'none';
-     sendBtn.style.display = numOfSweaters === 0 ? 'block' : 'none';
+     setDisplayResetBtn(numOfSweaters < 12);
+     setDisplaySetBtn(numOfSweaters === 0);
     };
 
     const addBackSweater = (sweaterId) => {
@@ -81,15 +82,27 @@ const Hero = () => {
     }
    }
 
-
-   const sendData = () => {
-    const lastSentTime = localStorage.getItem('lastSentTime');
-    const currentTime = new Date().getTime();
-
-    if (lastSentTime && currentTime - lastSentTime  < 600000) {
-      alert("Error sending data. 10 minutes haven't passed since the last request.");
-      return;
+   const getData = async () => {
+    try {
+      const response = await axios.get("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930");
+      setData(response.data);
     }
+    catch (error) {
+      console.log("Error: ", error);
+    }
+  }
+
+   const sendData = async() => {
+    if(data.length > 0) {
+      const lastRequest = data[data.length-1];
+      const lastSentTime = parseTime(lastRequest.time);
+      const currentTime = parseTime(getCurrentTime());
+
+      if (lastSentTime && currentTime - lastSentTime  < 600000) {
+        alert("Error sending data. 10 minutes haven't passed since the last request.");
+        return;
+      }
+    } 
   
     try {
       const data = {
@@ -102,19 +115,19 @@ const Hero = () => {
         ip: ipAddress
       };
   
-      axios.post("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930", data);
-      localStorage.setItem('lastSentTime', currentTime.toString());
-
+      await axios.post("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930", data);
+      await getData();
       alert("Data sent successfully!");
+
+
+
     } catch(error) {
       console.error("Error: ", error);
     }
   }
 
-  useEffect(() => {getIp()},[]);
+  useEffect(() => {getIp(), getData()},[]);
   useEffect(toggleButtons, [sweatersState]);
-
-
   
   return (
     <div>
@@ -130,9 +143,12 @@ const Hero = () => {
         ))}
         </div>
 
-        <div id='hero-sendBtn'>
-          <Button text='ELKŰLDŐM' onClick={sendData}/>
-        </div>
+        {displaySendBtn && (
+          <div id='hero-sendBtn'>
+            <Button text='ELKŰLDŐM' onClick={sendData}/>
+          </div>
+        )}
+
       </div>
 
 
@@ -142,9 +158,11 @@ const Hero = () => {
         ))}
       </div>   
 
-      <div id='hero-resetBtn'>
-        <Button text='VISSZAÁLITÁS' type='reset' onClick={resetSweaters}/>
-      </div>
+      {displayResetBtn && (
+        <div id='hero-resetBtn'>
+          <Button text='VISSZAÁLITÁS' type='reset' onClick={resetSweaters}/>
+        </div>
+      )}
     </div>
   )
 }

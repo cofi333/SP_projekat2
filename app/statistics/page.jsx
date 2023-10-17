@@ -15,7 +15,7 @@ const page = () => {
     try {
       const response = await axios.get("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930");
       setData(response.data);
-      setIsLoading(false);
+      setIsLoading(false); 
     }
     catch (error) {
       console.log("Error: ", error);
@@ -24,13 +24,14 @@ const page = () => {
 
   useEffect(() => {
     getData()
-  }, [])
+  }, []);
+
 
   const lastDateAndTimeRequest = () => {
-    if(data.length !== 0) {
-      let lastElement = data.slice(-1);
-      let date = lastElement[0].date;
-      let time = lastElement[0].time;
+    if(data.length > 0) {
+      let lastElement = data[data.length-1];
+      let date = lastElement.date;
+      let time = lastElement.time;
       let dateTime = `${date} ${time}`
 
       return dateTime;
@@ -56,6 +57,7 @@ const page = () => {
 
     }
 
+
     return (
       <div className='total-numbers'>
         <p>SZENT ISTVÁN KIRÁLY ZENEI ALAPÍTVÁNY: {szent_istvan}</p>
@@ -67,7 +69,14 @@ const page = () => {
 
   }
 
-  
+  const deleteData = async (row) => {
+    try {
+      await axios.delete(`https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930/${row}`);
+      setData((prevData) => prevData.filter((item,index) => index !== row));
+    } catch (error) {
+      console.error('Error deleting data:', error.message);
+    }
+  };
 
   return (
     <div className="statistics">
@@ -107,7 +116,7 @@ const page = () => {
   
             <div className="hero-s table">
               <h2>Data:</h2>
-                <Table tableData={data}/>
+                <Table tableData={data} onDelete={deleteData}/>
             </div>
           </div>
         </>
