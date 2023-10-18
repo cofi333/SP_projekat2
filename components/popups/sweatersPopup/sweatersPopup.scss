@@ -1,6 +1,6 @@
 .number {
     color: #fff;
-    font-size: 70px;
+    font-size: 70px !important;
     cursor: pointer;
 }
 
@@ -10,12 +10,12 @@ span {
 
 @media only screen and (max-width: 900px) {
     .number {
-        font-size: 50px;
+        font-size: 50px !important;
     }
 }
 
 @media only screen and (max-width: 500px) {
     .number {
-        font-size: 25px;
+        font-size: 25px !important;
     }
 }

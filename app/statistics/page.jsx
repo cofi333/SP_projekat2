@@ -2,8 +2,9 @@
 import './statistics.scss'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { ProgressBar } from 'react-loader-spinner'
 import { Table } from '@/components'
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const page = () => {
 
@@ -81,17 +82,10 @@ const page = () => {
   return (
     <div className="statistics">
       {isLoading ? (
-          <div className='loading-animation'>
-            <ProgressBar
-          height="80"
-          width="80"
-          ariaLabel="progress-bar-loading"
-          wrapperStyle={{}}
-          wrapperClass="progress-bar-wrapper"
-          borderColor = '#FFF'
-          barColor = '#000'
-          className='loading'
-            />
+          <div className='loading'>
+            <Box sx={{ display: 'flex', justifyContent: 'center'}}>
+              <CircularProgress />
+           </Box>
           </div>
       ) : (
         <>

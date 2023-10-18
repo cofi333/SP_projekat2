@@ -7,7 +7,10 @@ const Sweater = (props) => {
   const [{isDragging}, drag] = useDrag(() => ( {
     type: 'image',
     item: {id: props.id,
-    folded: props.img2 == null ? false : true}
+    folded: props.img2 == null ? false : true},
+    options: {
+      enableTouchEvents: true,
+    }
   }))
 
   return (

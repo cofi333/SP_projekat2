@@ -1,9 +1,9 @@
 'use client'
 import Image from "next/image"
-import { Sweater,Shelf, Button } from "@/components"
+import { Sweater,Shelf, Button, Snackbar } from "@/components"
 import { sweaters, foundations } from "@/constants"
 import { useState, useEffect, useRef } from "react"
-import { getCurrentDate, getCurrentTime, parseTime } from "@/functions"
+import { getCurrentDate, getCurrentTime, parseDateTime } from "@/functions"
 import './hero.scss'
 import { useDrop } from "react-dnd"
 import axios from "axios"
@@ -14,6 +14,8 @@ const Hero = () => {
   const [numOfSweaters, setNumOfSweaters] = useState([0,0,0,0]);
   const [displayResetBtn, setDisplayResetBtn] = useState(false);
   const [displaySendBtn, setDisplaySetBtn] = useState(false);
+  const [snackBar, setSnackBar ] = useState({open: false, message: '', type: ''});
+  const [isSending, setIsSending] = useState(false);
   const [data, setData] = useState();
   const [ipAddress, setIpAddress] = useState();
   const shelfRefs = Array.from({ length: 4 }, () => useRef(null));
@@ -83,48 +85,58 @@ const Hero = () => {
    }
 
    const getData = async () => {
-    try {
-      const response = await axios.get("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930");
-      setData(response.data);
+      try {
+        const response = await axios.get("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930");
+        setData(response.data);
+      }
+      catch (error) {
+        console.log("Error: ", error);
+      }
     }
-    catch (error) {
-      console.log("Error: ", error);
-    }
-  }
 
    const sendData = async() => {
     if(data.length > 0) {
       const lastRequest = data[data.length-1];
-      const lastSentTime = parseTime(lastRequest.time);
-      const currentTime = parseTime(getCurrentTime());
+      const lastSentDateTime = parseDateTime(lastRequest.date, lastRequest.time);
+      const currentDateTime = parseDateTime(getCurrentDate(), getCurrentTime());
 
-      if (lastSentTime && currentTime - lastSentTime  < 600000) {
-        alert("Error sending data. 10 minutes haven't passed since the last request.");
+      if (lastSentDateTime && currentDateTime - lastSentDateTime  < 600000) {
+        setSnackBar({ open: true,  message: "Error sending data. 10 minutes haven't passed since the last request.", type: 'error' });
         return;
       }
     } 
   
     try {
-      const data = {
-        szent_istvan_kiraly_zenei_alapitvany: numOfSweaters[0] === 0 ? "0" : numOfSweaters[0],
-        autizmus_alapitvany: numOfSweaters[1] === 0 ? "0" : numOfSweaters[1],
-        elemiszer_bankegysulet: numOfSweaters[2] === 0 ? "0" : numOfSweaters[2],
-        lampas_92_alapitvany: numOfSweaters[3] === 0 ? "0" : numOfSweaters[3],
-        date: getCurrentDate(),
-        time: getCurrentTime(), 
-        ip: ipAddress
-      };
-  
-      await axios.post("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930", data);
-      await getData();
-      alert("Data sent successfully!");
-
-
-
-    } catch(error) {
-      console.error("Error: ", error);
+      if(!isSending) {
+        setIsSending(true);
+        const data = {
+          szent_istvan_kiraly_zenei_alapitvany: numOfSweaters[0] === 0 ? "0" : numOfSweaters[0],
+          autizmus_alapitvany: numOfSweaters[1] === 0 ? "0" : numOfSweaters[1],
+          elemiszer_bankegysulet: numOfSweaters[2] === 0 ? "0" : numOfSweaters[2],
+          lampas_92_alapitvany: numOfSweaters[3] === 0 ? "0" : numOfSweaters[3],
+          date: getCurrentDate(),
+          time: getCurrentTime(), 
+          ip: ipAddress
+        };
+    
+        await axios.post("https://sheet.best/api/sheets/23c3bb4f-1443-485a-94a8-0ed3f7f04930", data);
+        await getData();
+        setIsSending(false);
+        setSnackBar({open: true, message: 'Data sent successfully!', type: 'success'});
+      }
+    }
+    catch(error) {
+        console.error("Error: ", error);
     }
   }
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackBar({ ...snackBar, open: false });
+  };
+
 
   useEffect(() => {getIp(), getData()},[]);
   useEffect(toggleButtons, [sweatersState]);
@@ -145,7 +157,7 @@ const Hero = () => {
 
         {displaySendBtn && (
           <div id='hero-sendBtn'>
-            <Button text='ELKŰLDŐM' onClick={sendData}/>
+            <Button text={isSending ? 'Sending...' : 'ELKŰLDŐM'} onClick={sendData} disabled={isSending}/>
           </div>
         )}
 
@@ -158,11 +170,12 @@ const Hero = () => {
         ))}
       </div>   
 
-      {displayResetBtn && (
+      {(displayResetBtn) && (
         <div id='hero-resetBtn'>
           <Button text='VISSZAÁLITÁS' type='reset' onClick={resetSweaters}/>
         </div>
       )}
+      <Snackbar open={snackBar.open} message={snackBar.message} severity={snackBar.type} handleClose={handleCloseSnackbar}/>
     </div>
   )
 }

@@ -1,3 +1,4 @@
+'use client'
 import * as React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,7 +13,6 @@ import Paper from '@mui/material/Paper';
 import { useState } from 'react';
 import './table.scss'
 import { TablePaginationActions, Dialog } from '@/components';
-import Button from '@mui/material/Button';
 
 function createData(foundation1, foundation2, foundation3 ,foundation4, date, time, ip, key) {
   return { foundation1, foundation2, foundation3, foundation4, date, time, ip, key };
@@ -131,7 +131,7 @@ export default function BasicTable(props) {
                 {row.ip}
               </TableCell>
               <TableCell align="center">
-                <Dialog onDelete={() => {props.onDelete(row.key)}}/>
+                <Dialog onDelete={async() => {await props.onDelete(row.key)}}/>
               </TableCell>
             </TableRow>
           ))}
