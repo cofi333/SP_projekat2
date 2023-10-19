@@ -1,33 +1,40 @@
-'use client'
-import { Hero } from '../components'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { TouchBackend } from 'react-dnd-touch-backend'
-import { useState, useEffect } from 'react'
-
+"use client";
+import { Hero } from "@/components";
+import {
+  DndContext,
+  TouchSensor,
+  useSensors,
+  useSensor,
+  MouseSensor,
+} from "@dnd-kit/core";
 
 export default function Home() {
+  const handleDrop = (event) => {
+    if (event && event.active && event.over) {
+      const activeId = event.active.id;
+      const overId = event.over.id;
 
-  const [isTouch, setIsTouch] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsTouch(window.innerWidth <= 768); 
+      if (overId !== "hatstand") {
+        const { addSweater, removeFromHatStand } = event.over.data.current;
+        const { folded } = event.active.data.current;
+        !folded && addSweater(activeId);
+        removeFromHatStand(activeId);
+      } else {
+        const { addBackSweater, removeSweaterFromShelf } =
+          event.over.data.current;
+        addBackSweater(activeId);
+        removeSweaterFromShelf(activeId);
+      }
     }
-    handleResize();
+  };
 
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []); 
-
-  const backend = isTouch ? TouchBackend : HTML5Backend;
+  const touchSensor = useSensor(TouchSensor);
+  const mouseSensor = useSensor(MouseSensor);
+  const sensors = useSensors(touchSensor, mouseSensor);
 
   return (
-    <DndProvider backend={backend}>
-      <Hero/>
-    </DndProvider>
-  )
+    <DndContext id='dndContext' onDragEnd={handleDrop} sensors={sensors}>
+      <Hero />
+    </DndContext>
+  );
 }

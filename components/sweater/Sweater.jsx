@@ -1,26 +1,40 @@
-'use client'
-import { useDrag } from "react-dnd"
-import { SweaterStyled, FoldedSweaterStyled } from "./SweaterStyled"
+"use client";
+import { SweaterStyled, FoldedSweaterStyled } from "./SweaterStyled";
+import { useDraggable } from "@dnd-kit/core";
 
 const Sweater = (props) => {
+  const { attributes, listeners, setNodeRef } = useDraggable({
+    id: props.id,
+    data: {
+      folded: props.img2 == null ? false : true,
+    },
+  });
 
-  const [{isDragging}, drag] = useDrag(() => ( {
-    type: 'image',
-    item: {id: props.id,
-    folded: props.img2 == null ? false : true},
-    options: {
-      enableTouchEvents: true,
-    }
-  }))
+  return props.img2 == null ? (
+    <SweaterStyled
+      src={props.img}
+      alt={`sweater ${props.id}`}
+      left={props.id * 7}
+      width={234}
+      height={189}
+      id={props.id}
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+    />
+  ) : (
+    <FoldedSweaterStyled
+      src={props.img2}
+      alt={`sweater ${props.id}`}
+      width={150}
+      height={20}
+      id={props.id}
+      top={props.top}
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+    />
+  );
+};
 
-  return (
-    props.img2 == null ?
-    <SweaterStyled src={props.img} alt={`sweater ${props.id}`} left={props.id*7} width={234} height={189} id={props.id} ref={drag}/>
-    :
-    <FoldedSweaterStyled src={props.img2} alt={`sweater ${props.id}`} width={150} height={20} id={props.id} ref={drag} top={props.top}/> 
-  )
-}
-
-
-
-export default Sweater
+export default Sweater;

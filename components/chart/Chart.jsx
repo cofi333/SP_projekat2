@@ -46,7 +46,7 @@ const Chart = (props) => {
           callbacks: {
             label: (context) => {
               const label = context.dataset.label || '';
-              const value = context.parsed.y.toFixed(2); // Format to two decimal places
+              const value = context.parsed.y.toFixed(2);
               return `${label}: ${value}%`;
             },
           },
