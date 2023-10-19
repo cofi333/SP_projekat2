@@ -10,13 +10,18 @@ export default function Home() {
 
   const [isTouch, setIsTouch] = useState(false);
 
-  const checkTouchSupport = () => {
-    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0);
-  };
-
   useEffect(() => {
-    checkTouchSupport();
-  }, []);
+    const handleResize = () => {
+      setIsTouch(window.innerWidth <= 768); 
+    }
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); 
 
   const backend = isTouch ? TouchBackend : HTML5Backend;
 

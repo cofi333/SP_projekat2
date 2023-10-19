@@ -2,7 +2,7 @@
 import './statistics.scss'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Table } from '@/components'
+import { Table, Chart } from '@/components'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
@@ -90,7 +90,7 @@ const page = () => {
       ) : (
         <>
           <div className="statistics-header">
-            <h1>Statistics</h1>
+            <h1>Statistics</h1> 
           </div>
   
           <div className="statistics-hero">
@@ -112,6 +112,19 @@ const page = () => {
               <h2>Data:</h2>
                 <Table tableData={data} onDelete={deleteData}/>
             </div>
+          </div>
+
+          <div className='statistics-chart'>
+          {data.length !== 0 ? (
+            <div className='chart'>
+              <Chart data={data}/>
+            </div>
+          ) : (
+          <>
+            <h2>Chart</h2>
+            <p>No data available</p>
+          </>
+            )}
           </div>
         </>
       )}

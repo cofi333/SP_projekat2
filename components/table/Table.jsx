@@ -86,7 +86,7 @@ export default function BasicTable(props) {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="center">SZENT ISTVÁN KIRÁLY ZENEI ALAPÍTVÁNY</TableCell>
+            <TableCell align="center">SZENT ISTVÁN KIRÁLY ZENEI</TableCell>
             <TableCell align="center">AUTIZMUS ALAPÍTVÁNY</TableCell>
             <TableCell align="center">ÉLELMISZERBANK EGYESŰLET</TableCell>
             <TableCell align="center">LÁMPÁS 92 ALAPÍTVÁNY</TableCell>
