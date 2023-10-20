@@ -10,7 +10,7 @@ const page = () => {
 
   const [data, setData] = useState();
   const [isLoading, setIsLoading] = useState(true);
-
+  const [error, setError] = useState(null);
 
   const getData = async () => {
     try {
@@ -19,7 +19,8 @@ const page = () => {
       setIsLoading(false); 
     }
     catch (error) {
-      console.log("Error: ", error);
+      setError("An error occurred while fetching data. Please try again later.");
+      setIsLoading(false);
     }
   }
 
@@ -87,6 +88,8 @@ const page = () => {
               <CircularProgress />
            </Box>
           </div>
+      ) : error ? (
+          <p style={{textAlign: 'center'}}>{error}</p>
       ) : (
         <>
           <div className="statistics-header">

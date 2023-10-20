@@ -56,17 +56,45 @@
     }
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 768px) {
+    
     .statistics-header h1 {
-        font-size: 35px;
+        font-size: 40px;
+    }
+    .statistics-hero {
+        padding: 10px 0;
+
+        .hero-s {
+            padding: 15px 0;
+        }
+
+        h2 {
+            font-size: 18px;
+        }
+
+        .total-numbers {
+            font-size: 15px;
+        }
     }
 
-    .statistics {
-        text-align: center;
-        font-size: 15px;
+    .statistics-chart {
+        padding: 25px 0;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .statistics-header h1 {
+        font-size: 30px;
+        padding-bottom: 10px;
     }
 
-    .statistics-hero .hero-s {
-        padding: 15px 0;
+    .statistics-hero {
+        .hero-s {
+            padding: 8px 0;
+        }
+
+        h2 {
+            font-size: 16px;
+        }
     }
 }

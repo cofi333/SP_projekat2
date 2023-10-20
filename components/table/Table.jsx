@@ -20,6 +20,7 @@ function createData(foundation1, foundation2, foundation3 ,foundation4, date, ti
 
 export default function BasicTable(props) {
 
+
    const [rowsPerPage, setRowsPerPage] = useState(10);
    const [page, setPage] = useState(0); 
    const [orderBy, setOrderBy] = useState('date');
@@ -79,8 +80,7 @@ export default function BasicTable(props) {
 
       const sortedRows = stableSort(rows, getComparator(order, orderBy));
 
-   
-    
+  
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">

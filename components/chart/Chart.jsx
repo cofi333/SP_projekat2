@@ -9,8 +9,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js/auto';
-import { calculatePercentage } from '@/functions';
-import './chart.scss'
+import { calculatePercentages } from '@/functions';
 import { useEffect, useState } from 'react';
 
 const Chart = (props) => {
@@ -54,33 +53,6 @@ const Chart = (props) => {
     },
   };
 
-  const calculatePercentages = (data) => {
-    let szent_istvan = 0;
-    let autizmus_alapitvany = 0;
-    let elemiszer_bankegysulet = 0;
-    let lampas_92 = 0;
-  
-    if (data.length !== 0) {
-      data.forEach((request) => {
-        szent_istvan += parseInt(request.szent_istvan_kiraly_zenei_alapitvany);
-        autizmus_alapitvany += parseInt(request.autizmus_alapitvany);
-        elemiszer_bankegysulet += parseInt(request.elemiszer_bankegysulet);
-        lampas_92 += parseInt(request.lampas_92_alapitvany);
-      });
-    }
-  
-    const allSweaters = data.length * 12;
-  
-    const percentages = {
-      szent_istvan: calculatePercentage(szent_istvan, allSweaters),
-      autizmus_alapitvany: calculatePercentage(autizmus_alapitvany, allSweaters),
-      elemiszer_bankegysulet: calculatePercentage(elemiszer_bankegysulet, allSweaters),
-      lampas_92: calculatePercentage(lampas_92, allSweaters),
-    };
-  
-    return percentages;
-  };
-
   const percentages = calculatePercentages(props.data);
 
   const data = {
@@ -96,7 +68,7 @@ const Chart = (props) => {
 
   useEffect(() => {
     const handleResize = () => {
-      setShowXTicks(window.innerWidth > 500);
+      setShowXTicks(window.innerWidth > 576);
     };
 
     handleResize();

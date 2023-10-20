@@ -29,4 +29,29 @@ export const parseDateTime = (dateString, timeString) => {
 
 export const calculatePercentage = (count, total) => { return (count / total) * 100 };
 
-
+export const calculatePercentages = (data) => {
+    let szent_istvan = 0;
+    let autizmus_alapitvany = 0;
+    let elemiszer_bankegysulet = 0;
+    let lampas_92 = 0;
+  
+    if (data.length !== 0) {
+      data.forEach((request) => {
+        szent_istvan += parseInt(request.szent_istvan_kiraly_zenei_alapitvany);
+        autizmus_alapitvany += parseInt(request.autizmus_alapitvany);
+        elemiszer_bankegysulet += parseInt(request.elemiszer_bankegysulet);
+        lampas_92 += parseInt(request.lampas_92_alapitvany);
+      });
+    }
+  
+    const allSweaters = data.length * 12;
+  
+    const percentages = {
+      szent_istvan: calculatePercentage(szent_istvan, allSweaters),
+      autizmus_alapitvany: calculatePercentage(autizmus_alapitvany, allSweaters),
+      elemiszer_bankegysulet: calculatePercentage(elemiszer_bankegysulet, allSweaters),
+      lampas_92: calculatePercentage(lampas_92, allSweaters),
+    };
+  
+    return percentages;
+};

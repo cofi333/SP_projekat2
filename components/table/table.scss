@@ -13,3 +13,10 @@
     gap: 5px;
     cursor: pointer;
 }
+
+@media only screen and (max-width: 768px) {
+    .MuiTableCell-root {
+        padding: 4px 15px;
+        font-size: 0.775rem;
+    }
+}

@@ -6,38 +6,8 @@ export const SweaterStyled = styled(Image) `
     top: 35%;
     left: ${props => props.left-2}%;
     z-index: ${props => props.id};
-
-    @media only screen and (max-width: 1600px) {
-        left: ${props => props.left-4}%;
-    }
-
-    @media only screen and (max-width: 1400px) {
-        width: 200px;
-        height: 160px;
-    }
-
-    @media only screen and (max-width: 1000px) {
-        width: 140px;
-        height: 120px;
-    }
-
-    @media only screen and (max-width: 745px) {
-        width: 100px;
-        height: 85px;
-    }
-
-    @media only screen and (max-width: 545px) {
-        width: 80px;
-        height: 65px;
-    }
-
-    @media only screen and (max-width: 445px) {
-        width: 50px;
-        height: 40px;
-        left: ${props => props.left-3}%;
-    }
-
-    
+    width: 13%;
+    height: 30%; 
 `
 export const FoldedSweaterStyled = styled(Image) `
 
@@ -47,7 +17,6 @@ export const FoldedSweaterStyled = styled(Image) `
 
     @media only screen and (max-width: 1450px) {
         width: 120px;
-        height: 20px;
     }
 
     @media only screen and (max-width: 1150px) {
